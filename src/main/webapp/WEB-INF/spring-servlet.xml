@@ -14,8 +14,7 @@
     <context:component-scan base-package="com.lwq.controller"/>
     <context:component-scan base-package="com.lwq.service"/>
 
-    <!--将url和代码进行映射-->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>-->
 
     <!--用什么格式返回，用作视图渲染-->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
