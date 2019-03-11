@@ -3,6 +3,9 @@ package com.lwq.common;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Author: Lwq
  * @Date: 2019/3/11 17:51
@@ -44,5 +47,13 @@ public class JsonData {
         JsonData jsonData = new JsonData(false);
         jsonData.msg=msg;
         return jsonData;
+    }
+
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("ret",ret);
+        result.put("msg",msg);
+        result.put("data",data);
+        return result;
     }
 }
