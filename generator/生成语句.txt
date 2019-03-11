@@ -1,0 +1,3 @@
+F:\Workspaces\ideaProjects\permission\generator>java -jar my
+batis-generator-core-1.3.2.jar -configfile generator.xml -ov
+erwrite
