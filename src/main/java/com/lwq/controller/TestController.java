@@ -1,11 +1,17 @@
 package com.lwq.controller;
 
 import com.lwq.common.JsonData;
+import com.lwq.exception.ParamException;
 import com.lwq.exception.PermissionException;
+import com.lwq.util.BeanValidator;
+import com.param.TestVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /**
  * @Author: Lwq
@@ -45,5 +51,30 @@ public class TestController {
     public JsonData hello04(){
         log.info("hello04");
         throw new RuntimeException("test hello04 exception");
+    }
+
+    @RequestMapping("/validate01.json")
+    @ResponseBody
+    public JsonData validate01(TestVo vo){
+        log.info("validate01");
+        try {
+            Map<String,String> map = BeanValidator.validateObject(vo);
+            if(MapUtils.isNotEmpty(map)){
+                for(Map.Entry<String,String> entry:map.entrySet()){
+                    log.info("{}-->{}",entry.getKey(),entry.getValue());
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return JsonData.success("test validate01");
+    }
+
+    @RequestMapping("/validate02.json")
+    @ResponseBody
+    public JsonData validate02(TestVo vo)throws ParamException {
+        log.info("validate02");
+        BeanValidator.check(vo);
+        return JsonData.success("test validate01");
     }
 }
