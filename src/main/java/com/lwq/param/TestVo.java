@@ -1,4 +1,4 @@
-package com.param;
+package com.lwq.param;
 
 import lombok.Getter;
 import lombok.Setter;

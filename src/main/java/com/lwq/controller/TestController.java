@@ -8,7 +8,7 @@ import com.lwq.exception.PermissionException;
 import com.lwq.model.SysAclModule;
 import com.lwq.util.BeanValidator;
 import com.lwq.util.JsonMapper;
-import com.param.TestVo;
+import com.lwq.param.TestVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.stereotype.Controller;
