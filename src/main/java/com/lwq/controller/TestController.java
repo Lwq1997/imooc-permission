@@ -1,9 +1,13 @@
 package com.lwq.controller;
 
+import com.lwq.common.ApplicationContextHelper;
 import com.lwq.common.JsonData;
+import com.lwq.dao.SysAclModuleMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.exception.PermissionException;
+import com.lwq.model.SysAclModule;
 import com.lwq.util.BeanValidator;
+import com.lwq.util.JsonMapper;
 import com.param.TestVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
@@ -75,6 +79,16 @@ public class TestController {
     public JsonData validate02(TestVo vo)throws ParamException {
         log.info("validate02");
         BeanValidator.check(vo);
-        return JsonData.success("test validate01");
+        return JsonData.success("test validate02");
+    }
+
+    @RequestMapping("/jsonAndApplication01.json")
+    @ResponseBody
+    public JsonData jsonAndApplication01()throws ParamException {
+        log.info("jsonAndApplication01");
+        SysAclModuleMapper sysAclModuleMapper = ApplicationContextHelper.popBean(SysAclModuleMapper.class);
+        SysAclModule module = sysAclModuleMapper.selectByPrimaryKey(1);
+        log.info(JsonMapper.object2String(module));
+        return JsonData.success("test jsonAndApplication01");
     }
 }
