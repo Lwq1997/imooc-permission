@@ -10,9 +10,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class LevelUtil {
 
-    private static final String SEPARATOR = ".";
+    public final static String SEPARATOR = ".";
 
-    private static final String ROOT = "0";
+    public final static String ROOT = "0";
 
     // 0
     // 0.1
