@@ -10,6 +10,11 @@
 
     <!--启动注解驱动的Spring MVC-->
     <mvc:annotation-driven/>
+
+    <!--http前后的监听工具-->
+    <mvc:interceptors>
+        <bean class="com.lwq.common.HttpInterceptor"/>
+    </mvc:interceptors>
     
     <!--包扫描-->
     <context:component-scan base-package="com.lwq.controller"/>
