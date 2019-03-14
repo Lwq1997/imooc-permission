@@ -36,7 +36,7 @@ public class SysUserService {
         }
 
         String password = PasswordUtil.randomPassword();
-        password = "1234678";
+        password = "12345678";
         String encryptedPassword = MD5Util.encrypt(password);
         SysUser user = SysUser.builder()
                 .username(param.getUsername())
@@ -86,12 +86,16 @@ public class SysUserService {
     }
 
 
-
     public boolean checkEmailExist(String mail,Integer userId){
-        return false;
+        return sysUserMapper.countByMail(mail,userId)>0;
     }
 
     public boolean checkTelephoneExist(String telephone,Integer userId){
-        return false;
+        return sysUserMapper.countByTelephone(telephone,userId)>0;
     }
+
+    public SysUser findByKeyword(String keyword){
+        return sysUserMapper.findByKeyword(keyword);
+    }
+
 }
