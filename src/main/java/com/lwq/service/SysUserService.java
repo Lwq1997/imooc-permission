@@ -1,17 +1,22 @@
 package com.lwq.service;
 
 import com.google.common.base.Preconditions;
+import com.lwq.beans.PageQuery;
+import com.lwq.beans.PageResult;
+import com.lwq.common.RequestHolder;
 import com.lwq.dao.SysUserMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysUser;
 import com.lwq.param.UserParam;
 import com.lwq.util.BeanValidator;
+import com.lwq.util.IpUtil;
 import com.lwq.util.MD5Util;
 import com.lwq.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Lwq
@@ -47,8 +52,8 @@ public class SysUserService {
                 .status(param.getStatus())
                 .remark(param.getRemark()).build();
 
-        user.setOperator("system");//TODO
-        user.setOperateIp("127.0.0.1");
+        user.setOperator(RequestHolder.getCurrentUser().getUsername());
+        user.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         user.setOperateTime(new Date());
 
         //TODO:sendEmail
@@ -78,8 +83,8 @@ public class SysUserService {
                 .status(param.getStatus())
                 .remark(param.getRemark()).build();
 
-        afterUser.setOperator("system-update");//TODO
-        afterUser.setOperateIp("127.0.0.1");
+        afterUser.setOperator(RequestHolder.getCurrentUser().getUsername());//TODO
+        afterUser.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         afterUser.setOperateTime(new Date());
 
         sysUserMapper.updateByPrimaryKeySelective(afterUser);
@@ -98,4 +103,17 @@ public class SysUserService {
         return sysUserMapper.findByKeyword(keyword);
     }
 
+    public PageResult<SysUser> getPageByDeptId(int deptId, PageQuery page) {
+        BeanValidator.check(page);
+        int count = sysUserMapper.countByDeptId(deptId);
+        if (count > 0) {
+            List<SysUser> list = sysUserMapper.getPageByDeptId(deptId, page);
+            return PageResult.<SysUser>builder().total(count).data(list).build();
+        }
+        return PageResult.<SysUser>builder().build();
+    }
+
+    public List<SysUser> getAll() {
+        return sysUserMapper.getAll();
+    }
 }

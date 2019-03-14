@@ -1,11 +1,13 @@
 package com.lwq.service;
 
 import com.google.common.base.Preconditions;
+import com.lwq.common.RequestHolder;
 import com.lwq.dao.SysDeptMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysDept;
 import com.lwq.param.DeptParam;
 import com.lwq.util.BeanValidator;
+import com.lwq.util.IpUtil;
 import com.lwq.util.LevelUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,8 +42,8 @@ public class SysDeptService {
                 .remark(param.getRemark()).build();
 
         dept.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()),param.getParentId()));
-        dept.setOperator("system");//TODO
-        dept.setOperateIp("127.0.0.1");
+        dept.setOperator(RequestHolder.getCurrentUser().getUsername());//TODO
+        dept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         dept.setOperateTime(new Date());
 
         sysDeptMapper.insertSelective(dept);
@@ -64,8 +66,8 @@ public class SysDeptService {
                 .remark(param.getRemark()).build();
 
         afterDept.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()),param.getParentId()));
-        afterDept.setOperator("system-update");//TODO
-        afterDept.setOperateIp("127.0.0.1");
+        afterDept.setOperator(RequestHolder.getCurrentUser().getUsername());//TODO
+        afterDept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         afterDept.setOperateTime(new Date());
 
         updateWithChild(beforeDept,afterDept);

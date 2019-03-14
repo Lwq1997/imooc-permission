@@ -57,7 +57,7 @@ public class UserController {
                 response.sendRedirect(ret);
                 return;
             } else {
-                response.sendRedirect("/admin/index.page"); //TODO
+                response.sendRedirect("/admin/index.page");
                 return;
             }
         }

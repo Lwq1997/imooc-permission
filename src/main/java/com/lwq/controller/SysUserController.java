@@ -1,11 +1,15 @@
 package com.lwq.controller;
 
+import com.lwq.beans.PageQuery;
+import com.lwq.beans.PageResult;
 import com.lwq.common.JsonData;
+import com.lwq.model.SysUser;
 import com.lwq.param.UserParam;
 import com.lwq.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,5 +47,12 @@ public class SysUserController {
     public JsonData updateUser(UserParam param){
         sysUserService.update(param);
         return JsonData.success();
+    }
+
+    @RequestMapping("/page.json")
+    @ResponseBody
+    public JsonData page(@RequestParam("deptId") int deptId, PageQuery pageQuery){
+        PageResult<SysUser> sysUserPageResult = sysUserService.getPageByDeptId(deptId,pageQuery);
+        return JsonData.success(sysUserPageResult);
     }
 }
