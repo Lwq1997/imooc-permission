@@ -30,6 +30,6 @@ public class DeptParam {
     @NotNull(message = "展示顺序不能为空")
     private Integer seq;
 
-    @Length(max = 150,message = "备注的长度需要在150之间")
+    @Length(min = 0,max = 200,message = "备注的长度需要在150之间")
     private String remark;
 }

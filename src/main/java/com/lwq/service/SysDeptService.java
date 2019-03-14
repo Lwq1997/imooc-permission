@@ -49,11 +49,12 @@ public class SysDeptService {
 
     public void update(DeptParam param){
         BeanValidator.check(param);
-        SysDept beforeDept = sysDeptMapper.selectByPrimaryKey(param.getId());
-        Preconditions.checkNotNull(beforeDept,"待更新的部门不存在");
         if(checkExist(param.getParentId(),param.getName(),param.getId())){
             throw new ParamException("同一层级下存在相同名称的部门");
         }
+
+        SysDept beforeDept = sysDeptMapper.selectByPrimaryKey(param.getId());
+        Preconditions.checkNotNull(beforeDept,"待更新的部门不存在");
 
         SysDept afterDept = SysDept.builder()
                 .id(param.getId())
