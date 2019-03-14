@@ -1,7 +1,6 @@
 package com.lwq.dao;
 
 import com.lwq.model.SysAclModule;
-import com.lwq.model.SysDept;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
