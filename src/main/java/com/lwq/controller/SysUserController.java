@@ -37,10 +37,9 @@ public class SysUserController {
     @Resource
     private SysRoleService sysRoleService;
 
-    @RequestMapping("/user.page")
-    @ResponseBody
-    public ModelAndView page(){
-        return new ModelAndView("user");
+    @RequestMapping("/noAuth.page")
+    public ModelAndView noAuth() {
+        return new ModelAndView("noAuth");
     }
 
     @RequestMapping("/save.json")
