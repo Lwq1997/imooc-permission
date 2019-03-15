@@ -1,13 +1,16 @@
 package com.lwq.service;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.lwq.common.RequestHolder;
 import com.lwq.dao.SysRoleMapper;
+import com.lwq.dao.SysRoleUserMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysRole;
 import com.lwq.param.RoleParam;
 import com.lwq.util.BeanValidator;
 import com.lwq.util.IpUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +28,9 @@ public class SysRoleService {
 
     @Resource
     private SysRoleMapper sysRoleMapper;
+
+    @Resource
+    private SysRoleUserMapper sysRoleUserMapper;
 
     public void save(RoleParam param) {
         BeanValidator.check(param);
@@ -67,5 +73,14 @@ public class SysRoleService {
 
     private boolean checkExist(String name, Integer id) {
         return sysRoleMapper.countByName(name, id) > 0;
+    }
+
+    public List<SysRole> getRoleListByUserId(int userId){
+        List<Integer> roleIdListByUserId = sysRoleUserMapper.getRoleIdListByUserId(userId);
+
+        if(CollectionUtils.isEmpty(roleIdListByUserId)){
+            return Lists.newArrayList();
+        }
+        return sysRoleMapper.getByIdList(roleIdListByUserId);
     }
 }
