@@ -3,10 +3,13 @@ package com.lwq.service;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.lwq.common.RequestHolder;
+import com.lwq.dao.SysRoleAclMapper;
 import com.lwq.dao.SysRoleMapper;
 import com.lwq.dao.SysRoleUserMapper;
+import com.lwq.dao.SysUserMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysRole;
+import com.lwq.model.SysUser;
 import com.lwq.param.RoleParam;
 import com.lwq.util.BeanValidator;
 import com.lwq.util.IpUtil;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Lwq
@@ -31,6 +35,12 @@ public class SysRoleService {
 
     @Resource
     private SysRoleUserMapper sysRoleUserMapper;
+
+    @Resource
+    private SysRoleAclMapper sysRoleAclMapper;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
 
     public void save(RoleParam param) {
         BeanValidator.check(param);
@@ -82,5 +92,28 @@ public class SysRoleService {
             return Lists.newArrayList();
         }
         return sysRoleMapper.getByIdList(roleIdListByUserId);
+    }
+
+    public List<SysRole> getRoleListByAclId(int aclId) {
+        List<Integer> roleIdListByAclId = sysRoleAclMapper.getRoleIdListByAclId(aclId);
+
+        if(CollectionUtils.isEmpty(roleIdListByAclId)){
+            return Lists.newArrayList();
+        }
+        return sysRoleMapper.getByIdList(roleIdListByAclId);
+    }
+
+    public List<SysUser> getUserListByRoleList(List<SysRole> roleList) {
+        if(CollectionUtils.isEmpty(roleList)){
+            return Lists.newArrayList();
+        }
+        List<Integer> roleIdList = roleList.stream()
+                .map(role -> role.getId())
+                .collect(Collectors.toList());
+        List<Integer> userIdList = sysRoleUserMapper.getUserIdListByRoleIdList(roleIdList);
+        if(CollectionUtils.isEmpty(userIdList)){
+            return Lists.newArrayList();
+        }
+        return sysUserMapper.getByIdList(userIdList);
     }
 }
