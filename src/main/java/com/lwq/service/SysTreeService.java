@@ -56,7 +56,7 @@ public class SysTreeService {
 
     public List<AclModuleLevelDto> roleTree(int roleId){
         //当前用户已经被分配的权限点
-        List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
+        List<SysAcl> userAclList = sysCoreService.getCurrentUserAclListFromCache();
         //当前角色已经被分配的权限点
         List<SysAcl> roleAclList = sysCoreService.getRoleAclList(roleId);
         //系统所有的权限点
