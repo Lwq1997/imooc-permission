@@ -2,6 +2,7 @@ package com.lwq.service;
 
 import com.google.common.base.Preconditions;
 import com.lwq.common.RequestHolder;
+import com.lwq.dao.SysAclMapper;
 import com.lwq.dao.SysAclModuleMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysAclModule;
@@ -30,6 +31,9 @@ public class SysAclModuleService {
 
     @Resource
     private SysAclModuleMapper sysAclModuleMapper;
+
+    @Resource
+    private SysAclMapper sysAclMapper;
 
     public void save(AclModuleParam param){
         BeanValidator.check(param);
@@ -109,5 +113,17 @@ public class SysAclModuleService {
             return null;
         }
         return aclModule.getLevel();
+    }
+
+    public void delete(int aclModuleId) {
+        SysAclModule aclModule = sysAclModuleMapper.selectByPrimaryKey(aclModuleId);
+        Preconditions.checkNotNull(aclModule,"当前权限模块不存在");
+        if(sysAclModuleMapper.countByParentId(aclModule.getId())>0){
+            throw new ParamException("当前权限模块下有子模块，无法删除");
+        }
+        if(sysAclMapper.countByAclModuleId(aclModule.getId())>0){
+            throw new ParamException("当前权限模块下有权限点，无法删除");
+        }
+        sysAclModuleMapper.deleteByPrimaryKey(aclModuleId);
     }
 }

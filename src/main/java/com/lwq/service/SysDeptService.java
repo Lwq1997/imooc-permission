@@ -3,6 +3,7 @@ package com.lwq.service;
 import com.google.common.base.Preconditions;
 import com.lwq.common.RequestHolder;
 import com.lwq.dao.SysDeptMapper;
+import com.lwq.dao.SysUserMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysDept;
 import com.lwq.param.DeptParam;
@@ -29,6 +30,9 @@ public class SysDeptService {
 
     @Resource
     private SysDeptMapper sysDeptMapper;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
 
     public void save(DeptParam param){
         BeanValidator.check(param);
@@ -108,4 +112,15 @@ public class SysDeptService {
     }
 
 
+    public void delete(int deptId) {
+        SysDept dept = sysDeptMapper.selectByPrimaryKey(deptId);
+        Preconditions.checkNotNull(dept,"待删除的部门不存在");
+        if(sysDeptMapper.countByParentId(dept.getId())>0){
+            throw new ParamException("当前部门下面有子部门,无法删除");
+        }
+        if(sysUserMapper.countByDeptId(deptId)>0){
+            throw new ParamException("当前部门下面由用户,无法删除");
+        }
+        sysDeptMapper.deleteByPrimaryKey(deptId);
+    }
 }
