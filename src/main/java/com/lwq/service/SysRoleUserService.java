@@ -2,13 +2,17 @@ package com.lwq.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.lwq.beans.LogType;
 import com.lwq.common.RequestHolder;
+import com.lwq.dao.SysLogMapper;
 import com.lwq.dao.SysRoleUserMapper;
 import com.lwq.dao.SysUserMapper;
+import com.lwq.model.SysLogWithBLOBs;
 import com.lwq.model.SysRoleAcl;
 import com.lwq.model.SysRoleUser;
 import com.lwq.model.SysUser;
 import com.lwq.util.IpUtil;
+import com.lwq.util.JsonMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +37,9 @@ public class SysRoleUserService {
     @Resource
     private SysUserMapper sysUserMapper;
 
+    @Resource
+    private SysLogMapper sysLogMapper;
+
     public List<SysUser> getListByRoleId(int roleId) {
         List<Integer> userIdList = sysRoleUserMapper.getUserIdListByRoleId(roleId);
         if(CollectionUtils.isEmpty(userIdList)){
@@ -53,6 +60,7 @@ public class SysRoleUserService {
             }
         }
         updateRoleAcls(roleId,userIdList);
+        saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
     @Transactional
@@ -74,5 +82,18 @@ public class SysRoleUserService {
             roleUserList.add(roleUser);
         }
         sysRoleUserMapper.batchInsert(roleUserList);
+    }
+
+    private void saveRoleUserLog(int roleId, List<Integer> before, List<Integer> after) {
+        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
+        sysLog.setType(LogType.TYPE_ROLE_USER);
+        sysLog.setTargetId(roleId);
+        sysLog.setOldValue(before == null ? "" : JsonMapper.object2String(before));
+        sysLog.setNewValue(after == null ? "" : JsonMapper.object2String(after));
+        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
+        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        sysLog.setOperateTime(new Date());
+        sysLog.setStatus(1);
+        sysLogMapper.insertSelective(sysLog);
     }
 }

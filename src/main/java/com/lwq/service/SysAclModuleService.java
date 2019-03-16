@@ -6,7 +6,6 @@ import com.lwq.dao.SysAclMapper;
 import com.lwq.dao.SysAclModuleMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysAclModule;
-import com.lwq.model.SysDept;
 import com.lwq.param.AclModuleParam;
 import com.lwq.util.BeanValidator;
 import com.lwq.util.IpUtil;
@@ -35,6 +34,9 @@ public class SysAclModuleService {
     @Resource
     private SysAclMapper sysAclMapper;
 
+    @Resource
+    private SysLogService sysLogService;
+
     public void save(AclModuleParam param){
         BeanValidator.check(param);
         if(checkExist(param.getParentId(),param.getName(),param.getId())){
@@ -54,6 +56,7 @@ public class SysAclModuleService {
         aclModule.setOperateTime(new Date());
 
         sysAclModuleMapper.insertSelective(aclModule);
+        sysLogService.saveAclModuleLog(null,aclModule);
     }
 
     public void update(AclModuleParam param){
@@ -80,6 +83,7 @@ public class SysAclModuleService {
         afterAclModule.setOperateTime(new Date());
 
         updateWithChild(beforeAclModule,afterAclModule);
+        sysLogService.saveAclModuleLog(beforeAclModule,afterAclModule);
     }
 
     @Transactional

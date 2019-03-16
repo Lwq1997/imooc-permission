@@ -30,6 +30,9 @@ public class SysUserService {
     @Resource
     private SysUserMapper sysUserMapper;
 
+    @Resource
+    private SysLogService sysLogService;
+
     public void save(UserParam param){
         BeanValidator.check(param);
 
@@ -59,6 +62,7 @@ public class SysUserService {
         //TODO:sendEmail
 
         sysUserMapper.insertSelective(user);
+        sysLogService.saveUserLog(null,user);
     }
 
     public void update(UserParam param){
@@ -88,6 +92,7 @@ public class SysUserService {
         afterUser.setOperateTime(new Date());
 
         sysUserMapper.updateByPrimaryKeySelective(afterUser);
+        sysLogService.saveUserLog(beforeUser,afterUser);
     }
 
 

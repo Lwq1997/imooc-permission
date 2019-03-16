@@ -3,6 +3,7 @@ package com.lwq.service;
 import com.google.common.base.Preconditions;
 import com.lwq.common.RequestHolder;
 import com.lwq.dao.SysDeptMapper;
+import com.lwq.dao.SysLogMapper;
 import com.lwq.dao.SysUserMapper;
 import com.lwq.exception.ParamException;
 import com.lwq.model.SysDept;
@@ -34,6 +35,9 @@ public class SysDeptService {
     @Resource
     private SysUserMapper sysUserMapper;
 
+    @Resource
+    private SysLogService sysLogService;
+
     public void save(DeptParam param){
         BeanValidator.check(param);
         if(checkExist(param.getParentId(),param.getName(),param.getId())){
@@ -51,6 +55,7 @@ public class SysDeptService {
         dept.setOperateTime(new Date());
 
         sysDeptMapper.insertSelective(dept);
+        sysLogService.saveDeptLog(null,dept);
     }
 
     public void update(DeptParam param){
@@ -75,6 +80,7 @@ public class SysDeptService {
         afterDept.setOperateTime(new Date());
 
         updateWithChild(beforeDept,afterDept);
+        sysLogService.saveDeptLog(beforeDept,afterDept);
     }
 
     @Transactional
