@@ -35,7 +35,7 @@ public class AclControlFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         String exclusionUrls = filterConfig.getInitParameter("exclusionUrls");
-        List<String> exclusionUrlList = Splitter.on(".").trimResults().omitEmptyStrings().splitToList(exclusionUrls);
+        List<String> exclusionUrlList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(exclusionUrls);
         exclusionUrlSet = Sets.newConcurrentHashSet(exclusionUrlList);
         exclusionUrlSet.add(noAuthUrl);
     }
